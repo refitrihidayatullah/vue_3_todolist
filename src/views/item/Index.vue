@@ -5,8 +5,13 @@
         TodoList
       </div>
       <div class="card-body">
+        <router-link
+          :to="{ name: 'item.create' }"
+          class="btn btn-primary shadow btn-sm mb-3"
+          >add</router-link
+        >
         <table class="table table-bordered border-primary text-center">
-          <thead class="table-primary">
+          <thead>
             <th>Item</th>
             <th>status</th>
             <th>time_completed</th>
@@ -35,6 +40,12 @@
                   @click.prevent="done(item.id)"
                 >
                   done
+                </button>
+                <button
+                  class="btn btn-danger btn-sm shadow"
+                  @click.prevent="del(item.id, index)"
+                >
+                  delete
                 </button>
               </th>
             </tr>
@@ -68,22 +79,36 @@ export default {
           console.log(err.response);
         });
     });
+
+    function del(id, index) {
+      axios
+        .delete(`http://127.0.0.1:8000/api/item/${id}`)
+        .then(() => {
+          items.value.data.splice(index, 1);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    }
+
     const router = useRouter();
     const route = useRoute();
 
     let item = reactive({
       completed: true,
     });
-    function done(id, index) {
+    function done(id) {
       axios
         .put(`http://127.0.0.1:8000/api/item/${id}`, item)
         .then(() => window.location.reload())
         .catch((err) => console.log(err.response));
     }
+
     return {
       items,
       itemsMessage,
       done,
+      del,
     };
   },
 };

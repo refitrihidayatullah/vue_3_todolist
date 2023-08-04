@@ -6,6 +6,11 @@ const routes = [
     name: "item.index",
     component: () => import("../views/item/Index.vue"),
   },
+  {
+    path: "/create",
+    name: "item.create",
+    component: () => import("../views/item/Create.vue"),
+  },
 ];
 
 const router = createRouter({
